@@ -1,0 +1,82 @@
+﻿<dx:DXWindow
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+        xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+        xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
+        xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors" 
+        xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" 
+        xmlns:ViewModel="clr-namespace:ManufacturerCode.ViewModel" 
+        x:Class="ManufacturerCode.MainWindow"
+        Title="MainWindow" Height="450" Width="525">
+    <dx:DXWindow.DataContext>
+        <ViewModel:ManufacturerViewModel/>
+    </dx:DXWindow.DataContext>
+
+    <Grid Margin="3,0,3.4,29">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <!--<ColumnDefinition Width="Auto"/>-->
+
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition  Height="60"/>
+            <RowDefinition Height="250"/>
+
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Column="0" Grid.Row="0" Margin="0,23,269.8,9.8" Text="Manufacturer:" 
+                       VerticalAlignment="Center" HorizontalAlignment="Right" Height="28" Width="101" />
+        <StackPanel Grid.Column="0" Grid.Row="0" Margin="90,0,0,0.4" >
+            <dxg:LookUpEdit HorizontalAlignment="Left" 
+                            Margin="10,23,0,0" 
+                            VerticalAlignment="Top" Width="186"  
+                            DisplayMember="CodeManufacturerName" 
+                            ValueMember="Code" x:Name="MlookUp" 
+                            ImmediatePopup="True" 
+                            IncrementalFiltering="True" 
+                            AutoPopulateColumns="False"
+                            IsPopupAutoWidth="False"
+                            AutoComplete="True" ItemsSource="{Binding Manufacturers}" 
+                            FilterCondition="Contains"
+                         >
+                
+                <dxmvvm:Interaction.Behaviors>
+                    <dxmvvm:EventToCommand EventName="EditValueChanged" Command="{Binding SelectedItemChangedCommand}" CommandParameter="{Binding ElementName=MlookUp, Path=EditValue}" UseDispatcher="True"/>
+                </dxmvvm:Interaction.Behaviors>
+
+                <dxg:LookUpEdit.PopupContentTemplate>
+                    <ControlTemplate>
+                        <dxg:GridControl x:Name="PART_GridControl">
+                            <dxg:GridControl.View>
+                                <dxg:TableView AutoWidth="True" AllowBestFit="True"/>
+                            </dxg:GridControl.View>
+                            <dxg:GridColumn FieldName="Code"/>
+                            <dxg:GridColumn FieldName="ManufacturerName" Header="Manufacturer Name"/>
+                        </dxg:GridControl>
+                    </ControlTemplate>
+                </dxg:LookUpEdit.PopupContentTemplate>
+                <dxg:LookUpEdit.StyleSettings>
+                    <dxg:SearchLookUpEditStyleSettings />
+                </dxg:LookUpEdit.StyleSettings>
+            </dxg:LookUpEdit>
+        </StackPanel>
+        <dxg:GridControl AutoGenerateColumns="AddNew" Grid.Row="1" 
+                         ItemsSource="{Binding ChildManufacturers}" SelectionMode="Row" Margin="10,0.2,95.6,0.2" AllowMRUFilterList="True">
+
+
+            <!--<dxg:GridControl.Columns>
+                <dxg:GridColumn FieldName="{Binding ChildManufacturer.IsSelected}" Header="Selected">
+                    <dxg:GridColumn.EditSettings>
+                        <dxe:CheckEditSettings/>
+                    </dxg:GridColumn.EditSettings>
+                </dxg:GridColumn>
+                <dxg:GridColumn FieldName="ChildManufacturer.ChildCode" Header="Child Code"/>
+
+            </dxg:GridControl.Columns>-->
+            <dxg:GridControl.View>
+                <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="True" ShowGroupPanel="False"/>
+            </dxg:GridControl.View>
+
+        </dxg:GridControl>
+    </Grid>
+</dx:DXWindow>
